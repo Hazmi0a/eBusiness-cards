@@ -1,0 +1,22 @@
+- name: install minio
+  tags: app
+  community.docker.docker_container:
+    name: minio
+    image: "{{ minio_image }}"
+    networks:
+      - name: "{{ network_name }}"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.minio-router.entrypoints: "websecure"
+      traefik.http.routers.minio-router.rule: "{{ MINIO_INGRESS_URL }}"
+      traefik.http.services.minio-service.loadbalancer.server.port: "9000"
+    env:
+      MINIO_ROOT_USER: "{{ MINIO_ROOT_USER }}"
+      MINIO_ROOT_PASSWORD: "{{ MINIO_ROOT_PASSWORD }}"
+      MINIO_DEFAULT_BUCKETS: "{{ MINIO_DEFAULT_BUCKETS }}"
+    volumes:
+      - "/minio:/data"
+    command: "server --address :9000  --console-address :9001 /data"
+    exposed_ports:
+      - "9001"

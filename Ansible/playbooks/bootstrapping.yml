@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+    - name: install updates
+      tags: updates
+      package:
+        update_cache: yes
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Create ansible user
+      tags: bootstrap
+      user:
+        name: ansible
+        groups: root
+
+    - name: add ssh key for ansible
+      tags: bootstrap
+      authorized_key:
+        user: ansible
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICDzWoI7ZW5q2/ZCtayhlmMLINvtLdUXYw9a6dqflqjB ansible"
+
+    - name: Add sudoers file for ansible
+      tags: bootstrap
+      copy:
+        src: sudoer_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: 0440

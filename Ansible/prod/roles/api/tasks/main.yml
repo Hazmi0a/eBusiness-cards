@@ -1,0 +1,61 @@
+- name: install baboon-api-dev  
+  tags: app, baboon-api-dev
+  when: server_type == "dev"
+  community.docker.docker_container:
+    name: baboon_api_dev
+    image: "{{ baboon_api_dev_image }}"
+    networks:
+      - name: "{{ network_name }}"
+    env:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: "{{ DATABASE_NAME }}"
+      DATABASE_USERNAME: "{{ DATABASE_USERNAME }}"
+      DATABASE_PASSWORD: "{{ DATABASE_PASSWORD }}"
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: "{{ MINIO_ROOT_USER }}" 
+      MINIO_SECRET_KEY: "{{ MINIO_ROOT_PASSWORD }}"
+      MINIO_SSL: "false"
+      MINIO_BUKET_NAME: "{{ MINIO_DEFAULT_BUCKETS }}"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.api.entrypoints: "websecure"
+      traefik.http.routers.api.rule: "{{ API_INGRESS_URL }}"
+      # traefik.http.middlewares.api.stripprefix.prefixes: "/api"
+      # traefik.http.middlewares.api.replacepath.path: "/api"
+      # traefik.http.middlewares.add-foo.addprefix.prefix: "/api"
+      com.centurylinklabs.watchtower.enable: "true"
+    restart_policy: unless-stopped
+
+- name: install baboon-api  
+  tags: app, baboon-api
+  when: server_type == "prod"
+  community.docker.docker_container:
+    name: baboon_api
+    image: "{{ baboon_api_image }}"
+    networks:
+      - name: "{{ network_name }}"
+    env:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: "{{ DATABASE_NAME }}"
+      DATABASE_USERNAME: "{{ DATABASE_USERNAME }}"
+      DATABASE_PASSWORD: "{{ DATABASE_PASSWORD }}"
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: "{{ MINIO_ROOT_USER }}" 
+      MINIO_SECRET_KEY: "{{ MINIO_ROOT_PASSWORD }}"
+      MINIO_SSL: "false"
+      MINIO_BUKET_NAME: "{{ MINIO_DEFAULT_BUCKETS }}"
+    ports:
+      - 5000:80
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.api.entrypoints: "websecure"
+      traefik.http.routers.api.rule: "{{ API_INGRESS_URL }}"
+      # traefik.http.middlewares.api.stripprefix.prefixes: "/api"
+      # traefik.http.middlewares.api.replacepath.path: "/api"
+      # traefik.http.middlewares.add-foo.addprefix.prefix: "/api"
+      com.centurylinklabs.watchtower.enable: "true"
+    restart_policy: unless-stopped

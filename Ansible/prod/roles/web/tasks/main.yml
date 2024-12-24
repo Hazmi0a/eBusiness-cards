@@ -1,0 +1,32 @@
+
+- name: install web
+  tags: app
+  community.docker.docker_container:
+    name: web
+    image: "{{ web_image }}"
+    networks:
+      - name: "{{ network_name }}"
+    ports:
+      - 3000:3000
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.web.entrypoints: "websecure"
+      traefik.http.routers.web.rule: "{{ WEB_INGRESS_URL }}"
+      com.centurylinklabs.watchtower.enable: "true"
+    restart_policy: unless-stopped
+
+# - name: install web
+#   tags: app
+#   community.docker.docker_container:
+#     name: web
+#     image: "me-jeddah-1.ocir.io/axq1davtp87n/sdc-peaks"
+#     networks:
+#       - name: "soudah"
+#     labels:
+#       traefik.enable: "true"
+#       traefik.docker.network: "soudah"
+#       traefik.http.routers.web.entrypoints: "websecure"
+#       traefik.http.routers.web.rule: "Host(`88.209.164.151`)"
+#       com.centurylinklabs.watchtower.enable: "true"
+#     restart_policy: unless-stopped

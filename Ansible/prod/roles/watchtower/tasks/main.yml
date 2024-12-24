@@ -1,0 +1,19 @@
+- name: Copy Watchtower config files
+  tags: dep
+  copy:
+    src: config.json 
+    dest: /home/ansible
+    owner: "{{ user }}"
+    group: docker
+
+- name: Deploy Watchtower 
+  tags: dep
+  community.docker.docker_container:
+    name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/ansible/config.json:/config.json
+    env:
+      WATCHTOWER_POLL_INTERVAL: "300"  # Check every 5 minutes for updates (adjust as necessary)
+

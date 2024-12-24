@@ -1,0 +1,35 @@
+- name: Copy Traefik config files
+  tags: dep
+  copy:
+    src: traefik-data
+    dest: /home/ansible
+    owner: "{{ user }}"
+    group: docker
+    mode: 0600
+    directory_mode: yes
+
+- name: Deploy Traefik
+  tags: dep
+  community.docker.docker_container:
+    name: traefik
+    image: "traefik:latest"
+    networks:
+      - name: "{{ network_name }}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/traefik:/etc/traefik
+      - /home/ansible/traefik-data/traefik.yml:/traefik.yml:ro
+      - /home/ansible/traefik-data/acme.json:/acme.json
+      - /home/ansible/traefik-data/configurations:/configurations
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.traefik-secure.entrypoints: "websecure"
+      traefik.http.routers.traefik-secure.rule: "{{ TRAEFIK_INGRESS_URL }}"
+      traefik.http.routers.traefik-secure.middlewares: "user-auth@file"
+      traefik.http.routers.traefik-secure.service: "api@internal"
+      com.centurylinklabs.watchtower.enable: "false"
+    restart_policy: unless-stopped

@@ -1,0 +1,28 @@
+---
+# - hosts: all 
+#   become: true
+#   pre_tasks:
+#     - name: update repository index
+#       tags: always
+#       package:
+#         update_cache: yes
+#       changed_when: false
+
+# - hosts: peaks
+#   become: true
+#   vars_files:
+#     - env_vars
+#   roles:
+#     - registry_login
+#     - cms 
+
+- hosts: all 
+  become: true
+  vars_files:
+    - env_vars
+  roles:
+    - registry_login
+    # - db
+    # - minio
+    # - api 
+    - web

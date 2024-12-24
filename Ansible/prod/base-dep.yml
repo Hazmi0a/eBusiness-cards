@@ -1,0 +1,20 @@
+---
+# - hosts: react, peaks
+#   become: true
+#   pre_tasks:
+#     - name: update repository index
+#       tags: always
+#       package:
+#         update_cache: yes
+#       changed_when: false
+
+- hosts: all
+  become: true
+  vars_files:
+    - env_vars
+  roles:
+    # - base
+    - create_docker_network
+    - traefik
+    - watchtower
+    # - portainer
