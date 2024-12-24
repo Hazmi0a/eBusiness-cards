@@ -4,7 +4,7 @@ oci_username: axq1davtp87n/abdullah@bhr.sa
 oci_auth_token: WEQV_wl[sL]+Cgra3k36
 web_image: me-jeddah-1.ocir.io/axq1davtp87n/qsas:latest
 network_name: nmdc
-ansible_user: ubuntu
+ansible_user: root
 WEB_INGRESS_URL:  Host(`ebusinesscards.newmurabba.com`)
 API_INGRESS_URL:  "Host(`ebusinesscards.newmurabba.com`) && PathPrefix(`/api`)"
 TRAEFIK_INGRESS_URL: "Host(`ebusinesscards.newmurabba.com`) && PathPrefix(`/traefik`)"
