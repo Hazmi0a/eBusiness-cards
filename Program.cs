@@ -1,6 +1,7 @@
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net;
 using QRCodePOC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,39 +22,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/VcardQRcode", (string encodedVCard) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
-app.MapGet("/GenerateQRCode", (string text) =>
-{
-    //generate guid
-    var guid = Guid.NewGuid().ToString();
-
     QRCodeGenerator qrGenerator = new QRCodeGenerator();
-    QRCodeData qrCodeData = qrGenerator.CreateQrCode(text + "\r\n" + guid, QRCodeGenerator.ECCLevel.Q);
+    string decodedVCard = WebUtility.UrlDecode(encodedVCard);
+    QRCodeData qrCodeData = qrGenerator.CreateQrCode(decodedVCard, QRCodeGenerator.ECCLevel.Q);
     QRCode qrCode = new QRCode(qrCodeData);
     Bitmap qrCodeImage = qrCode.GetGraphic(20);
     // use this when you want to show your logo in middle of QR Code and change color of qr code
-    Bitmap logoImage = new Bitmap(@"wwwroot/img/aircodlogo.jpg");
+    Bitmap logoImage = new Bitmap(@"wwwroot/img/NMDC_Logo.png");
     // Generate QR Code bitmap and convert to Base64
-    using (Bitmap qrCodeAsBitmap = qrCode.GetGraphic(20, Color.Black, Color.WhiteSmoke, logoImage))
+    using (Bitmap qrCodeAsBitmap = qrCode.GetGraphic(20, Color.Black, Color.WhiteSmoke,null))
     {
         using (MemoryStream ms = new MemoryStream())
         {
@@ -65,9 +44,17 @@ app.MapGet("/GenerateQRCode", (string text) =>
     }
 });
 
+app.MapGet("vcard", (string encodedVCard) =>
+{
+    string decodedVCard = WebUtility.UrlDecode(encodedVCard);
+
+    return decodedVCard;
+});
+
+app.MapGet("working", (string encodedVCard) =>
+{
+    return QRCode.EncodeVcard();
+});
+
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -110,5 +110,19 @@ namespace QRCodePOC
             graphicsPath.CloseFigure();
             return graphicsPath;
         }
+
+        public static string  EncodeVcard()
+        {
+            return "BEGIN:VCARD\n" +
+                        "VERSION:4.0\n" +
+                        "FN:Abdullah Alhazmi\n" +
+                        "N:Alhazmi;Abdullah\n" +
+                        "TEL;TYPE=WORK,VOICE:0506065978\n" +
+                        "EMAIL:Aalhazmi@newmurabba.com\n" +
+                        "ORG:New Murabba\n" +
+                        "TITLE:Assistant Manager, Service & Product Design\n" +
+                        "URL:https://newmurabba.com\n" +
+                        "END:VCARD";
+        }
     }
 }
