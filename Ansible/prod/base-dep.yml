@@ -13,7 +13,7 @@
   vars_files:
     - env_vars
   roles:
-    # - base
+    - base
     - create_docker_network
     - traefik
     - watchtower
