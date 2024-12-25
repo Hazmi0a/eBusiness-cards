@@ -1,26 +1,16 @@
-﻿using QRCoder;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing;
-using Microsoft.Maui.Graphics.Skia;
-using SkiaSharp;
-using SkiaSharp.QrCode.Image;
+﻿using SkiaSharp;
 using ZXing;
 using ZXing.QrCode;
 using ZXing.SkiaSharp;
 
 namespace QRCodePOC
 {
-    public class QRCode : AbstractQRCode, IDisposable
+    public class QRCode
     {
         public QRCode()
         {
         }
-
-        public QRCode(QRCodeData data)
-            : base(data)
-        {
-        }
+        
         
         public static string VcardGenerator(string email, string fn, string n, string tel, string title)
         {

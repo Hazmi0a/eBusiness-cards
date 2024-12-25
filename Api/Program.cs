@@ -1,7 +1,3 @@
-using QRCoder;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using QRCodePOC;
 
