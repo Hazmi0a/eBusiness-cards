@@ -29,4 +29,4 @@ jobs:
         with:
           context: Api
           push: true
-          tags: hazmi0a/ebusinesscard:v${{ steps.meta.outputs.tags }}
+          tags: hazmi0a/ebusinesscard:v0.1
