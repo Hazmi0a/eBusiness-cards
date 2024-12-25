@@ -2,6 +2,7 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using QRCodePOC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,17 +45,39 @@ app.MapGet("/VcardQRcode", (string encodedVCard) =>
     }
 });
 
-app.MapGet("vcard", (string encodedVCard) =>
+app.MapGet("/VcardQRcodeRaw", ([FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
-    string decodedVCard = WebUtility.UrlDecode(encodedVCard);
-
-    return decodedVCard;
+    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+    string vcard =  QRCode.VcardGenerator(email, fn, n, tel, title);
+    QRCodeData qrCodeData = qrGenerator.CreateQrCode(vcard, QRCodeGenerator.ECCLevel.Q);
+    QRCode qrCode = new QRCode(qrCodeData);
+    Bitmap qrCodeImage = qrCode.GetGraphic(20);
+    // use this when you want to show your logo in middle of QR Code and change color of qr code
+    Bitmap logoImage = new Bitmap(@"wwwroot/img/NMDC_Logo.png");
+    // Generate QR Code bitmap and convert to Base64
+    using (Bitmap qrCodeAsBitmap = qrCode.GetGraphic(20, Color.Black, Color.WhiteSmoke,null))
+    {
+        using (MemoryStream ms = new MemoryStream())
+        {
+            qrCodeAsBitmap.Save(ms, ImageFormat.Png);
+            string base64String = Convert.ToBase64String(ms.ToArray());
+            var data = "data:image/png;base64," + base64String;
+            return data;
+        }
+    }
 });
 
-app.MapGet("working", (string encodedVCard) =>
-{
-    return QRCode.EncodeVcard();
-});
+// app.MapGet("vcard", (string encodedVCard) =>
+// {
+//     string decodedVCard = WebUtility.UrlDecode(encodedVCard);
+//
+//     return decodedVCard;
+// });
+//
+// app.MapGet("working", (string encodedVCard) =>
+// {
+//     return QRCode.EncodeVcard();
+// });
 
 app.Run();
 

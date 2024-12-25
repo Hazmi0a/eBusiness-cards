@@ -124,5 +124,20 @@ namespace QRCodePOC
                         "URL:https://newmurabba.com\n" +
                         "END:VCARD";
         }
+
+        public static string VcardGenerator(string email, string fn, string n, string tel, string title)
+        {
+            return "BEGIN:VCARD\n" +
+                   "VERSION:4.0\n" +
+                   $"FN:{fn}\n" +
+                   $"N:{n}\n" +
+                   $"TEL;TYPE=WORK,VOICE:{tel}\n" +
+                   $"EMAIL:{email}\n" +
+                   "ORG:New Murabba\n" +
+                   $"TITLE:{title}\n" +
+                   $"ROLE:{title}\n" +
+                   "URL:https://newmurabba.com\n" +
+                   "END:VCARD";
+        }
     }
 }
