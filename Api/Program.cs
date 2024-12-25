@@ -23,48 +23,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/VcardQRcode", (string encodedVCard) =>
-{
-    QRCodeGenerator qrGenerator = new QRCodeGenerator();
-    string decodedVCard = WebUtility.UrlDecode(encodedVCard);
-    QRCodeData qrCodeData = qrGenerator.CreateQrCode(decodedVCard, QRCodeGenerator.ECCLevel.Q);
-    QRCode qrCode = new QRCode(qrCodeData);
-    Bitmap qrCodeImage = qrCode.GetGraphic(20);
-    // use this when you want to show your logo in middle of QR Code and change color of qr code
-    Bitmap logoImage = new Bitmap(@"wwwroot/img/NMDC_Logo.png");
-    // Generate QR Code bitmap and convert to Base64
-    using (Bitmap qrCodeAsBitmap = qrCode.GetGraphic(20, Color.Black, Color.WhiteSmoke,null))
-    {
-        using (MemoryStream ms = new MemoryStream())
-        {
-            qrCodeAsBitmap.Save(ms, ImageFormat.Png);
-            string base64String = Convert.ToBase64String(ms.ToArray());
-            var data = "data:image/png;base64," + base64String;
-            return data;
-        }
-    }
-});
-
 app.MapGet("/VcardQRcodeRaw", ([FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
-    QRCodeGenerator qrGenerator = new QRCodeGenerator();
     string vcard =  QRCode.VcardGenerator(email, fn, n, tel, title);
-    QRCodeData qrCodeData = qrGenerator.CreateQrCode(vcard, QRCodeGenerator.ECCLevel.Q);
-    QRCode qrCode = new QRCode(qrCodeData);
-    Bitmap qrCodeImage = qrCode.GetGraphic(20);
-    // use this when you want to show your logo in middle of QR Code and change color of qr code
-    Bitmap logoImage = new Bitmap(@"wwwroot/img/NMDC_Logo.png");
-    // Generate QR Code bitmap and convert to Base64
-    using (Bitmap qrCodeAsBitmap = qrCode.GetGraphic(20, Color.Black, Color.WhiteSmoke,null))
-    {
-        using (MemoryStream ms = new MemoryStream())
-        {
-            qrCodeAsBitmap.Save(ms, ImageFormat.Png);
-            string base64String = Convert.ToBase64String(ms.ToArray());
-            var data = "data:image/png;base64," + base64String;
-            return data;
-        }
-    }
+    var data = QRCode.GenerateQrCodeNative(vcard);
+    return "data:image/png;base64,"+data;
 });
 
 // app.MapGet("vcard", (string encodedVCard) =>
