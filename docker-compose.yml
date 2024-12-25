@@ -20,7 +20,7 @@ services:
   #     - 3000:3000
   api:
     build:
-      context: Apis
+      context: Api
       dockerfile: Dockerfile
     environment:
       - ADMIN_PASS=Test123..
