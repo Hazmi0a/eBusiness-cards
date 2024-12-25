@@ -2,7 +2,7 @@
   tags: dep
   copy:
     src: config.json 
-    dest: /home/ansible
+    dest: /home/"{{ user }}"
     owner: "{{ user }}"
     group: docker
 

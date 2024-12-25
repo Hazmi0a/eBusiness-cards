@@ -21,8 +21,8 @@
   vars_files:
     - env_vars
   roles:
-    - registry_login
+    # - registry_login
     # - db
     # - minio
-    # - api 
-    - web
+    - api 
+    # - web
