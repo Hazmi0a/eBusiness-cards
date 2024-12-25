@@ -1,0 +1,40 @@
+version: "3"
+services:
+  db:
+    image: "postgres:15" # use latest official postgres version
+    environment:
+      POSTGRES_PASSWORD: "Bhr2024#"
+      POSTGRES_USER: "bhr_sa"
+      POSTGRES_DB: "chatBhr"
+    ports:
+      - 5444:5432
+  # volumes:
+  #   - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+  # web:
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - BACKEND_URL=api:5000/api
+  #   ports:
+  #     - 3000:3000
+  api:
+    build:
+      context: Apis
+      dockerfile: Dockerfile
+    environment:
+      - ADMIN_PASS=Test123..
+      - ADMIN_EMAIL=admin@ncw.sa
+      # - MINIO_ENDPOINT=localhost:9000
+      # - MINIO_ACCESS_KEY=rootuser
+      # - MINIO_SECRET_KEY=rootpass123
+      # - MINIO_BUKET_NAME=spf
+      - DATABASE_HOST=testdb
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ncw
+      - DATABASE_USERNAME"=sa
+      - DATABASE_PASSWORD"=Password2021#
+    ports:
+      - 8080:8080
+  #   depends_on:
+  #     - testdb
