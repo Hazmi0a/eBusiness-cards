@@ -7,13 +7,17 @@ namespace QRCodePOC
 {
     public class QRCode
     {
-        public QRCode()
+        private readonly ILogger<QRCode> _logger;
+
+        public QRCode(ILogger<QRCode> logger)
         {
+            _logger = logger;
         }
         
         
-        public static string VcardGenerator(string email, string fn, string n, string tel, string title)
+        public async Task<string> VcardGenerator(string email, string fn, string n, string tel, string title)
         {
+            _logger.LogInformation("generating QR code for {email}", email);
             return "BEGIN:VCARD\n" +
                    "VERSION:4.0\n" +
                    $"FN:{fn}\n" +
@@ -27,7 +31,7 @@ namespace QRCodePOC
                    "END:VCARD";
         }
 
-        public static string GenerateQrCodeNative(string content)
+        public async Task<string> GenerateQrCodeNative(string content)
         {
             const int widthPixels = 1000;
             const int heightPixels = 1000;
