@@ -1,13 +1,13 @@
 version: "3"
 services:
-  db:
-    image: "postgres:15" # use latest official postgres version
-    environment:
-      POSTGRES_PASSWORD: "Bhr2024#"
-      POSTGRES_USER: "bhr_sa"
-      POSTGRES_DB: "chatBhr"
-    ports:
-      - 5444:5432
+  # db:
+  #   image: "postgres:15" # use latest official postgres version
+  #   environment:
+  #     POSTGRES_PASSWORD: "Bhr2024#"
+  #     POSTGRES_USER: "bhr_sa"
+  #     POSTGRES_DB: "chatBhr"
+  #   ports:
+  #     - 5444:5432
   # volumes:
   #   - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
   # web:
