@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using System.Text.RegularExpressions;
+using SkiaSharp;
 using ZXing;
 using ZXing.QrCode;
 using ZXing.SkiaSharp;
@@ -15,7 +16,7 @@ namespace QRCodePOC
         }
         
         
-        public async Task<string> VcardGenerator(string email, string fn, string n, string tel, string title)
+        public async Task<string?> VcardGenerator(string email, string fn, string n, string tel, string title)
         {
             _logger.LogInformation("generating QR code for {email}", email);
             return "BEGIN:VCARD\n" +
@@ -31,7 +32,7 @@ namespace QRCodePOC
                    "END:VCARD";
         }
 
-        public async Task<string> GenerateQrCodeNative(string content)
+        public async Task<string> GenerateQrCodeNative(string? content)
         {
             const int widthPixels = 1000;
             const int heightPixels = 1000;
