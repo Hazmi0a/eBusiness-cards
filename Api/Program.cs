@@ -53,17 +53,18 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.MapGet("/VcardQRcodeRaw", async Task<string> ([FromServices] QRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
+app.MapGet("/VcardQRcodeRaw", async ([FromServices] QRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
     // validate that the emails end with new murabba email 
     if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
     {
         // return TypedResults.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
-        return "Invalid email. Only emails ending with @newmurabba.com are allowed.";
+        return Results.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
     }
     var vcard =  await qrCodeService.VcardGenerator(email, fn, n, tel, title);
     var data = await qrCodeService.GenerateQrCodeNative(vcard);
-    return "data:image/png;base64," + data;
+    // return "data:image/png;base64," + data;
+    return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
 });
 
 app.Run();
