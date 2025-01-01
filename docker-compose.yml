@@ -23,6 +23,8 @@ services:
       context: Api
       dockerfile: Dockerfile
     environment:
+      - Auth__ApiKey=c0a61adad2c441c4bcb2ce48f48ae97b
+      - HostName=localhost:8080
       - ADMIN_PASS=Test123..
       - ADMIN_EMAIL=admin@ncw.sa
       # - MINIO_ENDPOINT=localhost:9000
@@ -35,6 +37,6 @@ services:
       - DATABASE_USERNAME"=sa
       - DATABASE_PASSWORD"=Password2021#
     ports:
-      - 8080:80
+      - 8080:80g
   #   depends_on:
   #     - testdb
