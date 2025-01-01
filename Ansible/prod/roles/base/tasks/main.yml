@@ -69,9 +69,17 @@
   package:
     name: python3-pip
 
+# - name: install python sdk
+#   become_user: "{{ ansible_env.USER }}"
+#   pip:
+#     name:
+#       - docker
+#       - docker-compose
+
 - name: install python sdk
-  become_user: "{{ ansible_env.USER }}"
-  pip:
+  tags: python
+  package:
     name:
-      - docker
-      - docker-compose
+      - python3-docker
+      - python3-docker-compose
+    update_cache: yes
