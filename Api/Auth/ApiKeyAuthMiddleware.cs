@@ -17,6 +17,13 @@ public class ApiKeyAuthMiddleware
     {
         try
         {
+            // Check if the request is for Swagger
+            if (context.Request.Path.StartsWithSegments("/swagger") || 
+                context.Request.Path.StartsWithSegments("/v3/api-docs"))
+            {
+                await _next(context);
+                return;
+            }
             if (!context.Request.Headers.TryGetValue(AuthConstants.ApiKeyHeaderName, out var extractedApiKey))
             {
                 _logger.LogError("No API key found in request");
