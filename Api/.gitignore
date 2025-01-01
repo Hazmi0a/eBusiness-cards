@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Exclude all files inside the Logs and QRCodes directories
+Logs/
+QRCodes/

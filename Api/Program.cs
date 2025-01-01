@@ -1,8 +1,10 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using QRCodePOC;
 using QRCodePOC.Auth;
+using QRCodePOC.Dtos;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +44,12 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "QRCodes")),
+    RequestPath = "/qrcodes"
+});
 
 app.UseRouting();
 
@@ -55,7 +62,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.MapGet("/VcardQRcodeRaw", async ([FromServices] QRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
+app.MapGet("/GenerateQrCode", async ([FromServices] QRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
     // validate that the emails end with new murabba email 
     if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
@@ -65,8 +72,19 @@ app.MapGet("/VcardQRcodeRaw", async ([FromServices] QRCode qrCodeService, [FromQ
     }
     var vcard =  await qrCodeService.VcardGenerator(email, fn, n, tel, title);
     var data = await qrCodeService.GenerateQrCodeNative(vcard);
+    
+    // Check if there's an existing QR code file in the wwwroot/qrcodes folder
+    var url = await qrCodeService.GetUrl(email);
+    if (url != null) return Results.Ok(url);
+
+    // If no file is found, execute SaveQrCode
+    var qrcodeUrl = await qrCodeService.SaveQrCode(data, email);
+    url = await qrCodeService.GetUrl(email);
+    
+    return Results.Ok(url);
+    
     // return "data:image/png;base64," + data;
-    return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
+    // return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
 });
 
 app.Run();
