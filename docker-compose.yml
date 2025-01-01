@@ -35,6 +35,6 @@ services:
       - DATABASE_USERNAME"=sa
       - DATABASE_PASSWORD"=Password2021#
     ports:
-      - 8080:8080
+      - 8080:80
   #   depends_on:
   #     - testdb
