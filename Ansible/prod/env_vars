@@ -1,11 +1,11 @@
-user: root
+user: ubuntu
 registry_url: me-jeddah-1.ocir.io
 oci_username: axq1davtp87n/abdullah@bhr.sa
 oci_auth_token: WEQV_wl[sL]+Cgra3k36
 api_image: hazmi0a/ebusinesscard:v0.1
 web_image: me-jeddah-1.ocir.io/axq1davtp87n/qsas:latest
 network_name: nmdc
-ansible_user: root
+ansible_user: ubuntu
 WEB_INGRESS_URL:  Host(`ebusinesscards.newmurabba.com`)
 # API_INGRESS_URL:  "Host(`ebusinesscards.newmurabba.com`) && PathPrefix(`/api`)"
 # API_INGRESS_URL:  Host(`159.65.144.17`)
@@ -14,3 +14,4 @@ TRAEFIK_INGRESS_URL: "Host(`traefik.hazmi0a.com`) && PathPrefix(`/traefik`)"
 DATABASE_NAME: "nmdc"
 DATABASE_USERNAME: "admin"
 DATABASE_PASSWORD: "Password2024#"
+API_KEY: "c0a61adad2c441c4bcb2ce48f48ae97b"

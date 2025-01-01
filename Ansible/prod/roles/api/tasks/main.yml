@@ -6,6 +6,7 @@
     networks:
       - name: "{{ network_name }}"
     env:
+      Auth__ApiKey: "{{ API_KEY }}"
       # DATABASE_HOST: db
       # DATABASE_PORT: "5432"
       # DATABASE_NAME: "{{ DATABASE_NAME }}"
