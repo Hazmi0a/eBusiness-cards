@@ -1,25 +1,24 @@
-﻿using System.Text.RegularExpressions;
 using QRCodePOC.Dtos;
 using SkiaSharp;
 using ZXing;
 using ZXing.QrCode;
 using ZXing.SkiaSharp;
 
-namespace QRCodePOC
-{
-    public class QRCode
-    {
-        private readonly ILogger<QRCode> _logger;
-        private readonly IConfiguration _configuration;
+namespace QRCodePOC;
 
-        public QRCode(ILogger<QRCode> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            _configuration = configuration;
-        }
-        
-        
-        public async Task<string?> VcardGenerator(string email, string fn, string n, string tel, string title)
+public class QRCode_dev : IQRCode
+{
+    private readonly ILogger<QRCode> _logger;
+    private readonly IConfiguration _configuration;
+
+    public QRCode_dev(ILogger<QRCode> logger, IConfiguration configuration)
+    {
+        _logger = logger;
+        _configuration = configuration;
+    }
+    
+    
+    public async Task<string?> VcardGenerator(string email, string fn, string n, string tel, string title)
         {
             _logger.LogInformation("generating QR code for {email}", email);
             return "BEGIN:VCARD\n" +
@@ -87,6 +86,7 @@ namespace QRCodePOC
 
         public async Task<Response?> GetUrl(string email)
         {
+            _logger.LogInformation("getting QR code url for {email}", email);
             var hostname = _configuration.GetValue<string>("HostName");
             // Check if there's an existing QR code file in the QRCodes folder
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "QRCodes");
@@ -94,15 +94,32 @@ namespace QRCodePOC
                 .GetFiles(folderPath, $"{email}*")
                 .FirstOrDefault();
 
+
+            if (existingFile == null)
+            {
+                _logger.LogInformation("No QR code found for {email}", email);
+                return null;
+            }
+            
+            // Check if the file is more than 2 weeks old
             if (existingFile != null)
             {
-                var fileName = Path.GetFileName(existingFile);
-                var res = new Response() { Url = hostname + "/QRCodes/" + fileName };
-                return res; // Return the existing file path if found
+                _logger.LogInformation("QR code found for {email}, but its older than 2 mins. deleting & generating new", email);
+                var fileInfo = new FileInfo(existingFile);
+                var olderThan = int.TryParse(_configuration["OlderThanDev"], out var value) ? value : 14;
+                
+                if (fileInfo.CreationTimeUtc < DateTime.UtcNow.AddMinutes(olderThan))
+                {
+                    // File is older than 2 weeks, delete it
+                    File.Delete(existingFile);
+                    return null;
+                }
             }
-            return null;
+            
+            _logger.LogInformation("QR code found for {email}", email);
+            var fileName = Path.GetFileName(existingFile);
+            var res = new Response() { Url = hostname + "/QRCodes/" + fileName };
+            return res; // Return the existing file path if found
         }
-        
-        
-    }
+    
 }
