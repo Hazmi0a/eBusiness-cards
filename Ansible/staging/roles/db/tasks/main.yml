@@ -1,0 +1,38 @@
+- name: install db
+  tags: app
+  when: server_type == "dev"
+  community.docker.docker_container:
+    name: db
+    image: "postgres:15.3"
+    networks:
+      - name: "{{ network_name }}"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.db.entrypoints: "tcp"
+      traefik.http.routers.db.rule: "{{ DB_DEV_INGRESS_URL }}"
+    env:
+      POSTGRES_PASSWORD: "{{ DATABASE_PASSWORD }}"
+      POSTGRES_USER: "{{ DATABASE_USERNAME }}"
+      POSTGRES_DB: "{{ DATABASE_NAME }}"
+    restart_policy: unless-stopped
+
+- name: install db
+  tags: app
+  when: server_type == "prod"
+  community.docker.docker_container:
+    name: db
+    image: "postgres:15.3"
+    networks:
+      - name: "{{ network_name }}"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "{{ network_name }}"
+      traefik.http.routers.db.entrypoints: "tcp"
+      traefik.http.routers.db.rule: "{{ DB_INGRESS_URL }}"
+    env:
+      POSTGRES_PASSWORD: "{{ DATABASE_PASSWORD }}"
+      POSTGRES_USER: "{{ DATABASE_USERNAME }}"
+      POSTGRES_DB: "{{ DATABASE_NAME }}"
+    restart_policy: unless-stopped
+

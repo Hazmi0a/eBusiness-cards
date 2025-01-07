@@ -1,0 +1,7 @@
+- name: Log into private registry and force re-authorization
+  tags: docker
+  community.docker.docker_login:
+    registry_url: "{{ registry_url }}"
+    username: "{{ oci_username }}"
+    password: "{{ oci_auth_token }}"
+    reauthorize: true
