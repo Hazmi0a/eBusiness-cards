@@ -1,5 +1,5 @@
 ---
-# - hosts: react, peaks
+# - hosts: all 
 #   become: true
 #   pre_tasks:
 #     - name: update repository index
@@ -8,13 +8,21 @@
 #         update_cache: yes
 #       changed_when: false
 
-- hosts: prod
+# - hosts: peaks
+#   become: true
+#   vars_files:
+#     - env_vars
+#   roles:
+#     - registry_login
+#     - cms 
+
+- hosts: staging 
   become: true
   vars_files:
     - env_vars
   roles:
-    # - base
-    - create_docker_network
-    - traefik
-    - watchtower
-    # - portainer
+    # - registry_login
+    # - db
+    # - minio
+    - api 
+    # - web

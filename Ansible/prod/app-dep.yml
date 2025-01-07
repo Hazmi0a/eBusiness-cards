@@ -16,7 +16,7 @@
 #     - registry_login
 #     - cms 
 
-- hosts: all 
+- hosts: prod 
   become: true
   vars_files:
     - env_vars

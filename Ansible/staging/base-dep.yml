@@ -8,7 +8,7 @@
 #         update_cache: yes
 #       changed_when: false
 
-- hosts: prod
+- hosts: staging
   become: true
   vars_files:
     - env_vars
