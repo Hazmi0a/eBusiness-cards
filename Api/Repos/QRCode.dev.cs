@@ -106,7 +106,7 @@ public class QRCode_dev : IQRCode
             {
                 _logger.LogInformation("QR code found for {email}, but its older than 2 mins. deleting & generating new", email);
                 var fileInfo = new FileInfo(existingFile);
-                var olderThan = int.TryParse(_configuration["OlderThanDev"], out var value) ? value : 14;
+                var olderThan = int.TryParse(_configuration["OlderThan"], out var value) ? value : 14;
                 
                 if (fileInfo.CreationTimeUtc < DateTime.UtcNow.AddMinutes(olderThan))
                 {
