@@ -2,7 +2,7 @@
   tags: dep
   copy:
     src: traefik-data
-    dest: /home/ubuntu
+    dest: /home/ansible
     owner: "{{ user }}"
     group: docker
     mode: 0600
@@ -21,11 +21,9 @@
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/traefik:/etc/traefik
-      - /home/ubuntu/traefik-data/traefik.yml:/traefik.yml:ro
-      - /home/ubuntu/traefik-data/acme.json:/acme.json
-      - /home/ubuntu/traefik-data/configurations:/configurations
-      - /home/ubuntu/traefik-data/ebusinesscards.newmurabba.com.csr:/ebusinesscards.newmurabba.com.csr
-      - /home/ubuntu/traefik-data/ebusinesscards.newmurabba.com.key:/ebusinesscards.newmurabba.com.key
+      - /home/ansible/traefik-data/traefik.yml:/traefik.yml:ro
+      - /home/ansible/traefik-data/acme.json:/acme.json
+      - /home/ansible/traefik-data/configurations:/configurations
     labels:
       traefik.enable: "true"
       traefik.docker.network: "{{ network_name }}"
