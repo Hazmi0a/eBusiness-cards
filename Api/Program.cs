@@ -74,7 +74,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.MapGet("/GenerateQrCode", async ([FromServices] QRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
+app.MapGet("/GenerateQrCode", async ([FromServices] IQRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
     // validate that the emails end with new murabba email 
     if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
