@@ -11,7 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Add custom services here
-builder.Services.AddScoped<QRCode>(); // Register the QRCode class
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddScoped<IQRCode, QRCode_dev>(); // Register the Dev QRCode class
+}
+else
+{
+    builder.Services.AddScoped<IQRCode, QRCode>(); // Register the QRCode class
+}
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,6 +37,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+// Log the environment during application startup
+Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
+
 app.UseSwagger();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
