@@ -8,9 +8,10 @@ network_name: nmdc
 ansible_user: ubuntu
 WEB_INGRESS_URL:  Host(`ebusinesscards.newmurabba.com`)
 API_INGRESS_URL:  Host(`84.8.109.57`)
-TRAEFIK_INGRESS_URL: "Host(`traefik.newmurabba.com`) && PathPrefix(`/traefik`)"
+TRAEFIK_INGRESS_URL: "Host(`84.8.109.57`) && PathPrefix(`/traefik`)"
 DATABASE_NAME: "nmdc"
 DATABASE_USERNAME: "admin"
 DATABASE_PASSWORD: "Password2024#"
 API_KEY: "c0a61adad2c441c4bcb2ce48f48ae97b"
 HostName: ebusinesscards.hazmi0a.com
+OlderThan: "14"
