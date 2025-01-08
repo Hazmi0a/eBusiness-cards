@@ -13,11 +13,7 @@ http:
       basicAuth:
         users:
           - "admin:$apr1$iVpyVf2D$izABSXkR.UKl9NtViWH9p1"
-
 tls:
-  certificates:
-    - certFile: /home/ubuntu/ebusinesscards.newmurabba.com.csr
-      keyFile: /home/ubuntu/ebusinesscards.newmurabba.com.key
   options:
     default:
       cipherSuites:

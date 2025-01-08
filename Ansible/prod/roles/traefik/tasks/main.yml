@@ -4,7 +4,7 @@
     src: traefik-data
     dest: /home/ubuntu
     owner: "{{ user }}"
-    group: docker
+    group: "{{ user }}" 
     mode: 0600
     directory_mode: yes
 
@@ -26,6 +26,7 @@
       - /home/ubuntu/traefik-data/configurations:/configurations
       - /home/ubuntu/traefik-data/ebusinesscards.newmurabba.com.csr:/ebusinesscards.newmurabba.com.csr
       - /home/ubuntu/traefik-data/ebusinesscards.newmurabba.com.key:/ebusinesscards.newmurabba.com.key
+      - /home/ubuntu/traefik-data/ebusinesscards.newmurabba.com.pem:/ebusinesscards.newmurabba.com.pem
     labels:
       traefik.enable: "true"
       traefik.docker.network: "{{ network_name }}"

@@ -16,3 +16,4 @@ DATABASE_USERNAME: "admin"
 DATABASE_PASSWORD: "Password2024#"
 API_KEY: "c0a61adad2c441c4bcb2ce48f48ae97b"
 HostName: ebusinesscards.hazmi0a.com
+OlderThan: "2"
