@@ -19,7 +19,8 @@ public class ApiKeyAuthMiddleware
         {
             // Check if the request is for Swagger
             if (context.Request.Path.StartsWithSegments("/swagger") || 
-                context.Request.Path.StartsWithSegments("/v3/api-docs"))
+                context.Request.Path.StartsWithSegments("/v3/api-docs") ||
+                context.Request.Path.StartsWithSegments("/VcardQRcodeRaw"))
             {
                 await _next(context);
                 return;

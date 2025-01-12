@@ -99,5 +99,19 @@ app.MapGet("/GenerateQrCode", async ([FromServices] IQRCode qrCodeService, [From
     // return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
 });
 
+app.MapGet("/VcardQRcodeRaw", async ([FromServices] IQRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
+{
+    // validate that the emails end with new murabba email 
+    if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
+    {
+        // return TypedResults.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
+        return Results.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
+    }
+    var vcard =  await qrCodeService.VcardGenerator(email, fn, n, tel, title);
+    var data = await qrCodeService.GenerateQrCodeNative(vcard);
+    // return "data:image/png;base64," + data;
+    return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
+});
+
 app.Run();
 
