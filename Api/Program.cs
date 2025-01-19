@@ -40,8 +40,6 @@ var app = builder.Build();
 // Log the environment during application startup
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
-app.UseSwagger();
-app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -74,30 +72,27 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.MapGet("/GenerateQrCode", async ([FromServices] IQRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
-{
-    // validate that the emails end with new murabba email 
-    if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
-    {
-        // return TypedResults.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
-        return Results.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
-    }
-    var vcard =  await qrCodeService.VcardGenerator(email, fn, n, tel, title);
-    var data = await qrCodeService.GenerateQrCodeNative(vcard);
-    
-    // Check if there's an existing QR code file in the wwwroot/qrcodes folder
-    var url = await qrCodeService.GetUrl(email);
-    if (url != null) return Results.Ok(url);
-
-    // If no file is found, execute SaveQrCode
-    var qrcodeUrl = await qrCodeService.SaveQrCode(data, email);
-    url = await qrCodeService.GetUrl(email);
-    
-    return Results.Ok(url);
-    
-    // return "data:image/png;base64," + data;
-    // return Results.File(Convert.FromBase64String(data), "image/png", "qrcode.png");
-});
+// app.MapGet("/GenerateQrCode", async ([FromServices] IQRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
+// {
+//     // validate that the emails end with new murabba email 
+//     if (!Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@newmurabba\.com$"))
+//     {
+//         // return TypedResults.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
+//         return Results.BadRequest("Invalid email. Only emails ending with @newmurabba.com are allowed.");
+//     }
+//     var vcard =  await qrCodeService.VcardGenerator(email, fn, n, tel, title);
+//     var data = await qrCodeService.GenerateQrCodeNative(vcard);
+//     
+//     // Check if there's an existing QR code file in the wwwroot/qrcodes folder
+//     var url = await qrCodeService.GetUrl(email);
+//     if (url != null) return Results.Ok(url);
+//
+//     // If no file is found, execute SaveQrCode
+//     var qrcodeUrl = await qrCodeService.SaveQrCode(data, email);
+//     url = await qrCodeService.GetUrl(email);
+//     
+//     return Results.Ok(url);
+// });
 
 app.MapGet("/VcardQRcodeRaw", async ([FromServices] IQRCode qrCodeService, [FromQuery] string email, [FromQuery] string fn, [FromQuery] string n, [FromQuery] string tel, [FromQuery] string title) =>
 {
